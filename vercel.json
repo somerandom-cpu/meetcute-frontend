@@ -1,0 +1,7 @@
+{
+  // Rewrites all non-static asset requests to index.html so React Router can handle client-side routes.
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
+  ]
+}
