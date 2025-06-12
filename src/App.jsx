@@ -1,0 +1,114 @@
+// frontend/src/App.jsx
+
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import Layout from './components/Layout/Layout';
+import LandingPage from './pages/LandingPage';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import VerifyEmailPage from './pages/VerifyEmailPage';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import ProfileSetup from './pages/ProfileSetup';
+import WithdrawalPage from './pages/WithdrawalPage';
+import DepositPage from './pages/DepositPage';
+import Dashboard from './pages/Dashboard';
+import Discover from './pages/Discover';
+import Messages from './pages/Messages';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminWithdrawalsPage from './pages/Admin/AdminWithdrawalsPage';
+import NotFound from './pages/NotFound';
+import Matches from './pages/Matches';
+import LikesYou from './pages/LikesYou';
+import Gifts from './pages/Gifts';
+import Premium from './pages/Premium';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import Suspended from './pages/Suspended';
+import Pricing from './pages/Pricing';
+import SubscriptionConfirmation from './pages/SubscriptionConfirmation';
+import ConfirmSubscriptionPage from './pages/ConfirmSubscriptionPage';
+import PrivateRoute from './components/PrivateRoute';
+import RequireAdmin from './components/RequireAdmin'; // Import RequireAdmin
+import AdminReferrals from './pages/AdminReferrals'; // Import AdminReferrals
+
+const router = createBrowserRouter([
+  // Routes without the main Layout
+  { path: "/login", element: <Login /> },
+  { path: "/register", element: <Register /> },
+  { path: "/verify-email", element: <VerifyEmailPage /> },
+  { path: "/forgot-password", element: <ForgotPassword /> },
+  { path: "/reset-password", element: <ResetPassword /> },
+  { path: "/suspended", element: <Suspended /> },
+  { path: "/", element: <LandingPage /> },
+  { path: "/profile-setup", element: <ProfileSetup /> }, // Moved outside PrivateRoute
+
+  // Routes with the main Layout (which now contains SubscriptionProvider)
+  {
+    element: <PrivateRoute><Layout /></PrivateRoute>,
+    children: [
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/discover", element: <Discover /> },
+      { path: "/messages", element: <Messages /> },
+      { path: "/messages/:conversationId", element: <Messages /> },
+      { path: "/matches", element: <Matches /> },
+      { path: "/likes-you", element: <LikesYou /> },
+      { path: "/gifts", element: <Gifts /> },
+      { path: "/premium", element: <Premium /> },
+      { path: "/pricing", element: <Pricing /> },
+      { path: "/profile", element: <Profile /> },
+      { path: "/settings", element: <Settings /> },
+      { path: "/withdrawals", element: <WithdrawalPage /> },
+      { path: "/deposits", element: <DepositPage /> },
+      { path: "/subscription/confirmation", element: <SubscriptionConfirmation /> },
+      { path: "/subscribe/:packageId", element: <ConfirmSubscriptionPage /> },
+    ]
+  },
+  
+  // Admin Routes
+  {
+    path: "/admin",
+    element: <PrivateRoute adminOnly={true}><AdminDashboard /></PrivateRoute>
+  },
+  {
+    path: "/admin/withdrawals",
+    element: <PrivateRoute adminOnly={true}><AdminWithdrawalsPage /></PrivateRoute>
+  },
+  {
+    path: "/admin/referrals",
+    element: <RequireAdmin><AdminReferrals /></RequireAdmin>
+  },
+
+  // Fallback Route
+  { path: "*", element: <NotFound /> }
+], {
+  future: {
+    v7_startTransition: true,
+    v7_relativeSplatPath: true,
+  },
+});
+
+function App() {
+  return (
+    <AuthProvider>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
+}
+
+export default App;
