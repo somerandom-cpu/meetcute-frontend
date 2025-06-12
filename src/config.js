@@ -6,11 +6,16 @@
 // API Base URL for WebSocket connections
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// Helper to ensure base URL ends with /api without duplicating
+const appendApi = (url) => {
+  return url.endsWith('/api') ? url : `${url.replace(/\/$/, '')}/api`;
+};
+
 // Default configuration (development)
 const config = {
   // API settings
   api: {
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+    baseURL: appendApi(import.meta.env.VITE_API_URL || 'http://localhost:5000'),
     timeout: 30000, // 30 seconds
     withCredentials: true,
   },
@@ -68,7 +73,7 @@ const envConfig = {
   production: {
     // Production-specific settings
     api: {
-      baseURL: import.meta.env.VITE_API_URL || 'https://api.meetcute81.com/api',
+      baseURL: appendApi(import.meta.env.VITE_API_URL || 'https://api.meetcute81.com'),
     },
     features: {
       enableDebug: false,
